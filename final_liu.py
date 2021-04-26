@@ -29,6 +29,7 @@ FILTER_MENU = """
             [T] Time Filter
             [Z] ZIP Code Filter
             [I] Injured Condition Filter
+            [U] Unique Key Filter
 """
 
 TIME_MENU = """
@@ -57,12 +58,6 @@ FILENAME = "nyc_veh_crash.csv"
 def load_file():
     df = pd.read_csv(FILENAME, index_col=0)
     return df
-
-def default_input(prompt, value) :
-    result = input(f"{prompt} - [Press Enter for {value}]" )
-    if result == "" :
-        result = value
-    return result
 
 def basic_report():
     df = load_file()
@@ -185,6 +180,7 @@ def data_filter_zip():
         comp = int(comp)
         df_group = df.groupby(["ZIP CODE"]).get_group(comp)
         st.dataframe(df_group)
+        st.write(f"Base on your filter, there is {len(df_group)} case fit your search" )
 
 def data_filter_injured():
     df = load_file()
@@ -199,6 +195,7 @@ def data_filter_injured():
     choice = st.sidebar.selectbox("Injured Condition: ", injured_condition)
     st.write(f'Filter: {choice}')
     st.dataframe(df.loc[df[choice] != 0])
+    st.write(f"Base on your filter, there is {len(df.loc[df[choice] != 0])} case fit your search" )
 
 def data_key_filter():
     df = load_file()
@@ -213,7 +210,6 @@ def data_key_filter():
         temp = df.loc[comp]
 
         st.dataframe(temp)
-        st.map(temp)
 
 def data_map_locate():
     df = load_file()
